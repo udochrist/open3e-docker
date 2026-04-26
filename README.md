@@ -101,6 +101,18 @@ docker-compose down
 docker-compose up -d --build
 ```
 
+## Usage
+
+
+### Standalone
+
+The docker container will connect to the can-bus and read/write data from the attached Viessmann device.
+
+### With Home Assistant
+
+In your Home Assistant add the open3e-ha integration via hacs and point it towards the mqtt server that is receiving the data published by this docker container.
+
+
 ## Building
 
 To build the Docker image manually:
@@ -167,10 +179,16 @@ The container runs with `NET_ADMIN` capability to manage CAN interfaces and uses
 - Update `entrypoint.sh` for custom startup logic
 - Adjust `docker-compose.yml` for different networking or volumes
 
-## License
-
-This project is licensed under the same terms as Open3E. See the [Open3E repository](https://github.com/open3e/open3e) for details.
-
 ## Contributing
 
 Contributions are welcome! Please open issues or pull requests on the GitHub repository.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- [Open3E Project](https://github.com/open3e/open3e) - Viessmann Open3E integration
+- [Open3E Home Assistant Integration](https://github.com/MojoOli/open3e-ha) - Integration for Viessmann Heatpumps via mqtt/modbus 
+- [Home Assistant](https://www.home-assistant.io/) - Home automation platform
