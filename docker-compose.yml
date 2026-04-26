@@ -16,13 +16,14 @@ services:
     # Mandatory environment variables - must be provided
     environment:
       CAN: "${CAN:-can0}"
-      LISTENTOPIC: "${LISTENTOPIC}"
-      TOPIC: "${TOPIC}"
-      FORMATSTRING: "${FORMATSTRING}"
-      CLIENTID: "${CLIENTID}"
-      MQTT_HOST: "${MQTT_HOST}"
-      MQTT_USER: "${MQTT_USER}"
+      CLIENTID: "${CLIENTID:-open3e}"
+      MQTT_HOST: "${MQTT_HOST:-mosquitto}"
+      MQTT_USER: "${MQTT_USER:-mqtt_user}"
       MQTT_PASSWORD: "${MQTT_PASSWORD}"
+      # use the defaults below unless you are also changing the ha integration configuration
+      TOPIC: "${TOPIC:-open3e}"
+      LISTENTOPIC: "${LISTENTOPIC:-open3e/cmnd}"
+      FORMATSTRING: "${FORMATSTRING:-{device}_{ecuAddr:03X}_{didNumber}_{didName}}"
     
     # Mount config volume for persistent data
     volumes:

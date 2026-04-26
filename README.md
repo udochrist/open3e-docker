@@ -1,31 +1,31 @@
 # Open3E Docker
 
-A Docker container for running Open3E energy monitoring system with CAN bus support.
+A Docker container for running Open3E energy monitoring system with CAN bus support for Viessmann heat pumps.
 
 ## Description
 
-This project provides a Dockerized version of [Open3E](https://github.com/open3e/open3e), an open-source energy monitoring system that communicates with energy meters via CAN bus and publishes data to MQTT.
+This project provides a Dockerized version of [Open3E](https://github.com/open3e/open3e), an open-source energy monitoring system that communicates with Viessmann heat pumps via CAN bus and publishes data to MQTT for integration with home automation systems.
 
 ## Features
 
 - Lightweight Alpine Linux base with Python 3.11
-- CAN bus interface management
-- MQTT integration
+- CAN bus interface management with NET_ADMIN capabilities
+- MQTT integration for data publishing
 - Persistent configuration storage
 - Health checks for CAN interface and service status
-- Docker Compose support
+- Docker Compose support with environment-based configuration
 
 ## Prerequisites
 
 - Docker and Docker Compose
 - CAN bus interface (physical or virtual)
-- MQTT broker (e.g., Mosquitto)
+- MQTT broker (e.g., Mosquitto, Eclipse Mosquitto)
 
 ## Installation
 
 1. Clone this repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/your-username/open3e-docker.git
    cd open3e-docker
    ```
 
@@ -52,7 +52,7 @@ The following environment variables must be set in your `.env` file:
 | `TOPIC` | MQTT topic to publish to | `open3e/server` |
 | `FORMATSTRING` | MQTT message format | `open3e/{id}` |
 | `CLIENTID` | MQTT client ID | `open3e` |
-| `MQTT_HOST` | MQTT broker hostname | `mosquitto` |
+| `MQTT_HOST` | MQTT broker hostname/IP | `mosquitto` |
 | `MQTT_USER` | MQTT username | `mqtt_user` |
 | `MQTT_PASSWORD` | MQTT password | `mqtt_password` |
 
@@ -66,7 +66,7 @@ sudo ip link set can0 type can bitrate 250000
 sudo ip link set can0 up
 ```
 
-For virtual CAN (testing):
+For virtual CAN (testing/development):
 
 ```bash
 # Create virtual CAN interface
@@ -101,17 +101,9 @@ docker-compose down
 docker-compose up -d --build
 ```
 
-## Usage
+### Standalone Operation
 
-
-### Standalone
-
-The docker container will connect to the can-bus and read/write data from the attached Viessmann device.
-
-### With Home Assistant
-
-In your Home Assistant add the open3e-ha integration via hacs and point it towards the mqtt server that is receiving the data published by this docker container.
-
+The Docker container connects to the CAN bus and reads/writes data from attached Viessmann devices, publishing measurements to MQTT topics for consumption by home automation systems or other monitoring tools.
 
 ## Building
 
@@ -124,8 +116,8 @@ docker build -t open3e-docker .
 ## Health Checks
 
 The container includes health checks that verify:
-- CAN interface availability
-- Open3E service is running
+- CAN interface availability and configuration
+- Open3E service is running and operational
 
 Check health status:
 
@@ -136,7 +128,7 @@ docker ps
 
 ## Volumes
 
-- `/config`: Persistent storage for Open3E configuration and device data
+- `/config`: Persistent storage for Open3E configuration files and discovered device data
 
 ## Networking
 
@@ -148,16 +140,24 @@ The container runs with `NET_ADMIN` capability to manage CAN interfaces and uses
 - Ensure the CAN interface exists and is up on the host
 - Check interface permissions (may need `--privileged` for some setups)
 - Verify bitrate matches your hardware (default: 250000)
+- Use `ip link show` to verify interface status
 
 ### MQTT Connection Issues
 - Verify MQTT broker is running and accessible
-- Check credentials in `.env`
+- Check credentials in `.env` file
 - Ensure network connectivity between containers
+- Test MQTT connection with tools like `mosquitto_pub`
 
 ### Service Won't Start
 - Check logs: `docker-compose logs open3e`
 - Verify all mandatory environment variables are set
 - Ensure `/config` volume is writable
+- Check CAN interface availability in health check output
+
+### Device Discovery Issues
+- Ensure Viessmann device is connected to CAN bus
+- Check CAN bus termination and wiring
+- Run `open3e_depictSystem` manually to debug device detection
 
 ## Development
 
@@ -168,7 +168,7 @@ The container runs with `NET_ADMIN` capability to manage CAN interfaces and uses
 ├── docker-compose.yml      # Compose configuration
 ├── .env.example           # Environment template
 ├── rootfs/                # Container filesystem
-│   ├── entrypoint.sh      # Startup script
+│   ├── entrypoint.sh      # Startup script with CAN setup
 │   └── healthcheck.sh     # Health check script
 └── README.md              # This file
 ```
@@ -178,17 +178,21 @@ The container runs with `NET_ADMIN` capability to manage CAN interfaces and uses
 - Modify `Dockerfile` for additional dependencies
 - Update `entrypoint.sh` for custom startup logic
 - Adjust `docker-compose.yml` for different networking or volumes
+- Add device-specific configurations in `/config`
 
 ## Contributing
 
-Contributions are welcome! Please open issues or pull requests on the GitHub repository.
+Contributions are welcome! Please:
+- Open issues for bugs or feature requests
+- Submit pull requests for improvements
+- Test changes with both physical and virtual CAN interfaces
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the same terms as the Open3E project. See the [Open3E repository](https://github.com/open3e/open3e) for license details.
 
 ## Acknowledgments
 
-- [Open3E Project](https://github.com/open3e/open3e) - Viessmann Open3E integration
-- [Open3E Home Assistant Integration](https://github.com/MojoOli/open3e-ha) - Integration for Viessmann Heatpumps via mqtt/modbus 
-- [Home Assistant](https://www.home-assistant.io/) - Home automation platform
+- [Open3E Project](https://github.com/open3e/open3e) - Core Viessmann Open3E integration
+- [Open3E Home Assistant Integration](https://github.com/MojoOli/open3e-ha) - HA integration for MQTT data
+- Docker and Alpine Linux communities for containerization tools
