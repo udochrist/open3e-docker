@@ -1,0 +1,37 @@
+services:
+  open3e:
+    
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: open3edocker:latest
+    container_name: open3e
+    restart: unless-stopped
+    
+    # Required capabilities for CAN interface management
+    cap_add:
+      - NET_ADMIN
+    
+    # Mandatory environment variables - must be provided
+    environment:
+      CAN: "${CAN:-can0}"
+      LISTENTOPIC: "${LISTENTOPIC}"
+      TOPIC: "${TOPIC}"
+      FORMATSTRING: "${FORMATSTRING}"
+      CLIENTID: "${CLIENTID}"
+      MQTT_HOST: "${MQTT_HOST}"
+      MQTT_USER: "${MQTT_USER}"
+      MQTT_PASSWORD: "${MQTT_PASSWORD}"
+    
+    # Mount config volume for persistent data
+    volumes:
+      - ./config:/config
+    
+    # Healthcheck (optional)
+    healthcheck:
+      test: ["CMD", "/bin/sh", "/healthcheck.sh"]
+      interval: 2m
+      timeout: 3s
+      retries: 3
+      start_period: 30s
