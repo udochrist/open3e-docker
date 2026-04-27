@@ -113,6 +113,19 @@ To build the Docker image manually:
 docker build -t open3e-docker .
 ```
 
+To build for arm64 locally with Docker Buildx:
+
+```bash
+docker buildx build --platform linux/arm64 -t open3e-docker:arm64 .
+```
+
+To build and run the compose service for arm64:
+
+```bash
+docker compose build --platform linux/arm64
+docker compose up -d
+```
+
 ## Automated publishing
 
 This repository includes a GitHub Actions workflow at `.github/workflows/docker-image.yml`.
