@@ -5,13 +5,17 @@ services:
       context: .
       dockerfile: Dockerfile
 
-    image: open3edocker:latest
+    image: ghcr.io/udochrist/open3edocker:latest
     container_name: open3e
     restart: unless-stopped
     
     # Required capabilities for CAN interface management
     cap_add:
       - NET_ADMIN
+    
+    # Mount config volume for persistent data
+    volumes:
+      - ./config:/config
     
     # Mandatory environment variables - must be provided
     environment:
@@ -24,10 +28,6 @@ services:
       TOPIC: "${TOPIC:-open3e}"
       LISTENTOPIC: "${LISTENTOPIC:-open3e/cmnd}"
       FORMATSTRING: "${FORMATSTRING:-{device}_{ecuAddr:03X}_{didNumber}_{didName}}"
-    
-    # Mount config volume for persistent data
-    volumes:
-      - ./config:/config
     
     # Healthcheck (optional)
     healthcheck:
