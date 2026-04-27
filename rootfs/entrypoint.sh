@@ -9,15 +9,19 @@ fi
 
 
 # Check if CAN interface is available
-ip link show "$CAN" > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "CAN interface $CAN not available"
-    exit 1
-fi
+#ip link show "$CAN" > /dev/null 2>&1
+#if [ $? -ne 0 ]; then
+#    echo "CAN interface $CAN not available"
+#    exit 1
+#fi
+
+ip link | grep $CAN
 
 
 # restart the can interface with the correct bitrate
-ip link set down $CAN && ip link set $CAN type can bitrate 250000 && ip link set up $CAN
+ip link set down $CAN
+ip link set $CAN type can bitrate 250000 && ip link set up $CAN
+
 ip link | grep $CAN
 
 
