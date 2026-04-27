@@ -113,6 +113,24 @@ To build the Docker image manually:
 docker build -t open3e-docker .
 ```
 
+## Automated publishing
+
+This repository includes a GitHub Actions workflow at `.github/workflows/docker-image.yml`.
+
+Behavior:
+- `push` to `main` publishes `latest` and a commit-sha image.
+- `push` of a tag like `v1.0.0` or `release-1.0.0` publishes the tag name and commit-sha images only.
+
+Required GitHub secrets:
+- `REGISTRY_USERNAME`
+- `REGISTRY_PASSWORD`
+
+Default registry configuration:
+- `ghcr.io`
+- image name: `ghcr.io/udochrist/open3e-docker`
+
+If you want to use Docker Hub, update `.github/workflows/docker-image.yml` and use a registry value of `docker.io`.
+
 ## Health Checks
 
 The container includes health checks that verify:
