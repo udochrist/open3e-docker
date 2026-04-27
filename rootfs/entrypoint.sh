@@ -16,12 +16,8 @@ fi
 #fi
 
 ip link | grep $CAN
-
-
-# restart the can interface with the correct bitrate
-ip link set down $CAN
-ip link set $CAN type can bitrate 250000 && ip link set up $CAN
-
+ip link add dev vcan0 type vcan
+ip link set up $CAN
 ip link | grep $CAN
 
 
