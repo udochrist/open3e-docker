@@ -16,7 +16,7 @@ fi
 #fi
 
 ip link | grep $CAN
-ip link add dev vcan0 type vcan
+ip link add dev $CAN type vcan
 ip link set up $CAN
 ip link | grep $CAN
 
