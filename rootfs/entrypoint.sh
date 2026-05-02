@@ -2,8 +2,16 @@
 
 
 # Check that all mandatory variables are set
-if [ -z "$CAN" ] || [ -z "$LISTENTOPIC" ] || [ -z "$TOPIC" ] || [ -z "$FORMATSTRING" ] || [ -z "$CLIENTID" ] || [ -z "$MQTT_HOST" ] || [ -z "$MQTT_USER" ] || [ -z "$MQTT_PASSWORD" ]; then
-  echo "Error: One or more mandatory configuration variables are missing or empty"
+missing=0
+for var in CAN LISTENTOPIC TOPIC FORMATSTRING CLIENTID MQTT_HOST MQTT_USER MQTT_PASSWORD; do
+  eval "value=\$$var"
+  if [ -z "$value" ]; then
+    echo "Error: mandatory configuration variable '$var' is missing or empty"
+    missing=1
+  fi
+done
+
+if [ "$missing" -ne 0 ]; then
   exit 1
 fi
 
