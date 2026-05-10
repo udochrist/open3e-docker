@@ -17,16 +17,11 @@ fi
 
 
 # Check if CAN interface is available
-#ip link show "$CAN" > /dev/null 2>&1
-#if [ $? -ne 0 ]; then
-#    echo "CAN interface $CAN not available"
-#    exit 1
-#fi
-
-ip link | grep $CAN
-ip link add dev $CAN type vcan
-ip link set up $CAN
-ip link | grep $CAN
+ip link show "$CAN" > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "CAN interface $CAN not available"
+    exit 1
+fi
 
 
 # clean config directory. we need to discover the connected devices and create the config file for open3e

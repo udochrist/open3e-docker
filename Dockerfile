@@ -1,9 +1,9 @@
-FROM python:3.11-alpine
+FROM python:latest
 
-LABEL org.opencontainers.image.source=https://github.com/udochrist/open3e-docker
+LABEL org.opencontainers.image.source="https://github.com/udochrist/open3e-docker"
 LABEL org.opencontainers.image.description="Open3E is a tool that listens to CAN messages and publishes them to an MQTT broker. This Docker image provides a convenient way to run Open3E in a containerized environment."
 LABEL org.opencontainers.image.title="Open3E Docker Image"
-LABEL org.opencontainers.image.licenses=MIT
+LABEL org.opencontainers.image.licenses="MIT"
 
 
 RUN apk update && apk add --no-cache git iproute2

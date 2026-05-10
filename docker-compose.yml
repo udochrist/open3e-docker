@@ -13,6 +13,9 @@ services:
     cap_add:
       - NET_ADMIN
     
+    devices:
+      - /dev/can0:/dev/can0
+
     # Mount config volume for persistent data
     volumes:
       - ./config:/config
