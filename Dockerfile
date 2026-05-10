@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:alpine
 
 LABEL org.opencontainers.image.source="https://github.com/udochrist/open3e-docker"
 LABEL org.opencontainers.image.description="Open3E is a tool that listens to CAN messages and publishes them to an MQTT broker. This Docker image provides a convenient way to run Open3E in a containerized environment."
@@ -6,9 +6,8 @@ LABEL org.opencontainers.image.title="Open3E Docker Image"
 LABEL org.opencontainers.image.licenses="MIT"
 
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends git iproute2 && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache git iproute2 && \
+    rm -rf /var/lib/apk/lists/*
 RUN mkdir -p /data
 
 # Mandatory environment variables (must be provided at runtime):
