@@ -6,7 +6,9 @@ LABEL org.opencontainers.image.title="Open3E Docker Image"
 LABEL org.opencontainers.image.licenses="MIT"
 
 
-RUN apk update && apk add --no-cache git iproute2
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git iproute2 && \
+    rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /data
 
 # Mandatory environment variables (must be provided at runtime):
